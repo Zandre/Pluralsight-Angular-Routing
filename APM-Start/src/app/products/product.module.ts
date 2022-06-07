@@ -9,26 +9,30 @@ import { ProductResolver } from './product-resolver.service';
 
 import { SharedModule } from '../shared/shared.module';
 import { RouterModule } from '@angular/router';
+import { AuthGuard } from '../user/auth.guard';
+import { ProductEditGuard } from './product-edit/product-edit.guard';
 
 @NgModule({
   imports: [
     SharedModule,
     RouterModule.forChild([
-      { 
-        path: 'products', 
+      {
+        path: 'products',
+        // canActivate: [AuthGuard],
         children: [
           {
             path: '',
             component: ProductListComponent,
           },
-          { 
-            path: ':id', 
-            component: ProductDetailComponent, 
-            resolve: { resolvedData: ProductResolver} 
+          {
+            path: ':id',
+            component: ProductDetailComponent,
+            resolve: { resolvedData: ProductResolver}
           },
-          { 
-            path: ':id/edit', 
+          {
+            path: ':id/edit',
             component: ProductEditComponent,
+            canDeactivate: [ProductEditGuard],
             resolve: { resolvedData: ProductResolver },
             children: [
               {
@@ -44,7 +48,7 @@ import { RouterModule } from '@angular/router';
                 path: 'tags',
                 component: ProductEditTagsComponent
               }
-            ] 
+            ]
           }
         ]
       }
